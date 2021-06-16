@@ -1,15 +1,8 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Jun 13 16:38:13 2021
-
-@author: NICOVE.RG
-"""
-
 #Import libreries
 import datetime
 import hashlib
 import json
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import requests
 from uuid import uuid4
 from urllib.parse import urlparse
@@ -117,7 +110,7 @@ def mine_block():
     previous_proof = previous_block['proof']
     proof = blockchain.proof_of_work(previous_proof)
     previous_hash = blockchain.hash(previous_block)
-    blockchain.add_transaction(sender = node_address, receiver = 'Hadelin', amount = 10)
+    blockchain.add_transaction(sender = node_address, receiver = 'John McJohn', amount = 10)
     block = blockchain.create_block(proof, previous_hash)
     response = {'message': 'You\'ve mined a block',
                 'index': block['index'],
@@ -148,8 +141,8 @@ def is_valid():
 @app.route('/add_transaction', methods = ['POST'])
 def add_transaction():
     json = request.get_json()
-    transaction_keys = ['sender', 'receiver', 'amout']
-    if not all (keys in json for key in transaction_keys):
+    transaction_keys = ['sender', 'receiver', 'amount']
+    if not all (key in json for key in transaction_keys):
         return 'Some elements of the transaction are missing', 400
     index = blockchain.add_transaction(json['sender'], json['receiver'], json['amount'])
     response = {'message': f'This transaction will be added to Block {index}'}
@@ -184,7 +177,7 @@ def replace_chain():
                     'actual_chain': blockchain.chain}
     return jsonify(response), 200
 
-app.run(host='0.0.0.0', port = 5000)
+app.run(host='0.0.0.0', port = 5003)
     
 
 
